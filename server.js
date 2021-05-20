@@ -4,6 +4,14 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./db');
 
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
 
 const morgan = require('morgan');
 

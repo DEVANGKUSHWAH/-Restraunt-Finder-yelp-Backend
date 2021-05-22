@@ -6,6 +6,13 @@ const cors = require('cors');
 
 const { Client } = require('pg');
 
+const morgan = require('morgan');
+
+const app = express();
+
+app.use(cors({ origin: (origin, callback) => callback(null, true) }));
+app.use(express.json());
+
 const db = new Client({
 	connectionString: process.env.DATABASE_URL,
 	ssl: {
@@ -19,12 +26,6 @@ try {
 	console.log(e);
 }
 
-const morgan = require('morgan');
-
-const app = express();
-
-app.use(cors());
-app.use(express.json());
 app.get('/cool', (req, res) => res.send(cool()));
 
 // Get all Restaurants

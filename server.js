@@ -2,26 +2,22 @@ require('dotenv').config();
 const cool = require('cool-ascii-faces');
 const express = require('express');
 const cors = require('cors');
-const db = require('./db');
-
-// const { Pool } = require('pg');
-// const pool = new Pool({
-//   connectionString: process.env.DATABASE_URL,
-//   ssl: {
-//     rejectUnauthorized: false
-//   }
-// });
+// const db = require('./db');
 
 const { Client } = require('pg');
 
-const client = new Client({
+const db = new Client({
 	connectionString: process.env.DATABASE_URL,
 	ssl: {
 		rejectUnauthorized: false,
 	},
 });
 
-client.connect();
+try {
+	db.connect().then(() => console.log('db connected'));
+} catch (e) {
+	console.log(e);
+}
 
 const morgan = require('morgan');
 
@@ -35,6 +31,7 @@ app.get('/cool', (req, res) => res.send(cool()));
 app.get('/api/v1/restaurants', async (req, res) => {
 	try {
 		// const results = await db.query('select * from restaurants');
+		console.log('data pass');
 		const restaurantRatingsData = await db.query(
 			'select * from restaurants left join (select restaurant_id, COUNT(*), TRUNC(AVG(rating),1) as average_rating from reviews group by restaurant_id) reviews on restaurants.id = reviews.restaurant_id;'
 		);

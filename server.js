@@ -4,14 +4,24 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./db');
 
-const { Pool } = require('pg');
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+// const { Pool } = require('pg');
+// const pool = new Pool({
+//   connectionString: process.env.DATABASE_URL,
+//   ssl: {
+//     rejectUnauthorized: false
+//   }
+// });
+
+const { Client } = require('pg');
+
+const client = new Client({
+	connectionString: process.env.DATABASE_URL,
+	ssl: {
+		rejectUnauthorized: false,
+	},
 });
 
+client.connect();
 
 const morgan = require('morgan');
 
@@ -19,7 +29,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.get('/cool', (req, res) => res.send(cool()))
+app.get('/cool', (req, res) => res.send(cool()));
 
 // Get all Restaurants
 app.get('/api/v1/restaurants', async (req, res) => {
